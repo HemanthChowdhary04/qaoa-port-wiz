@@ -245,23 +245,81 @@ export function PortfolioResults({ results, onBack }: PortfolioResultsProps) {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <BarChart3 className="h-5 w-5 text-primary" />
-                Algorithm Comparison
+                Sharpe Ratio Comparison Across Strategies
               </CardTitle>
               <CardDescription>
-                Performance across different optimization methods
+                Quantum advantage demonstration: QAOA vs classical baselines
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="h-80">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={performanceData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="method" />
-                    <YAxis />
-                    <Tooltip />
-                    <Bar dataKey="sharpe" fill="#3B82F6" name="Sharpe Ratio" />
+                  <BarChart data={performanceData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                    <XAxis 
+                      dataKey="method" 
+                      tick={{ fontSize: 12 }}
+                      interval={0}
+                      angle={-45}
+                      textAnchor="end"
+                      height={80}
+                    />
+                    <YAxis 
+                      label={{ value: 'Sharpe Ratio', angle: -90, position: 'insideLeft' }}
+                      domain={[0, 'dataMax + 0.2']}
+                    />
+                    <Tooltip 
+                      formatter={(value: number) => [value.toFixed(3), 'Sharpe Ratio']}
+                      labelStyle={{ color: 'hsl(var(--foreground))' }}
+                      contentStyle={{ 
+                        backgroundColor: 'hsl(var(--background))',
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '6px'
+                      }}
+                    />
+                    <Bar 
+                      dataKey="sharpe" 
+                      name="Sharpe Ratio"
+                    >
+                      {performanceData.map((entry, index) => {
+                        const colors = ['#6B7280', '#3B82F6', '#10B981', '#F59E0B']; // gray, blue, green, gold
+                        return <Cell key={`cell-${index}`} fill={colors[index]} />;
+                      })}
+                    </Bar>
                   </BarChart>
                 </ResponsiveContainer>
+              </div>
+              
+              {/* Strategy Annotations */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
+                <div className="flex items-center gap-2 p-2 rounded-lg bg-muted/50">
+                  <div className="w-3 h-3 rounded" style={{ backgroundColor: '#6B7280' }} />
+                  <div>
+                    <div className="text-xs font-medium">Baseline</div>
+                    <div className="text-xs text-muted-foreground">Equal-weight greedy</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 p-2 rounded-lg bg-muted/50">
+                  <div className="w-3 h-3 rounded" style={{ backgroundColor: '#3B82F6' }} />
+                  <div>
+                    <div className="text-xs font-medium">Quantum Basic</div>
+                    <div className="text-xs text-muted-foreground">QAOA selection</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 p-2 rounded-lg bg-muted/50">
+                  <div className="w-3 h-3 rounded" style={{ backgroundColor: '#10B981' }} />
+                  <div>
+                    <div className="text-xs font-medium">Quantum Advantage</div>
+                    <div className="text-xs text-muted-foreground">QAOA + refinement</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 p-2 rounded-lg bg-muted/50">
+                  <div className="w-3 h-3 rounded" style={{ backgroundColor: '#F59E0B' }} />
+                  <div>
+                    <div className="text-xs font-medium">Classical Optimal</div>
+                    <div className="text-xs text-muted-foreground">No constraints</div>
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -392,8 +450,20 @@ export function PortfolioResults({ results, onBack }: PortfolioResultsProps) {
                 <Label className="text-sm font-medium">QUBO Formulation</Label>
                 <p className="text-sm text-muted-foreground">
                   Mixed-integer optimization with {bestResult.selectedAssets.length} binary variables, 
-                  cardinality constraints, and Sharpe ratio maximization via Dinkelbach decomposition.
+                  cardinality constraints, Ledoit-Wolf covariance shrinkage, and Sharpe ratio maximization 
+                  via Dinkelbach decomposition. Transaction costs and sector constraints included.
                 </p>
+                
+                <div className="space-y-2 mt-4">
+                  <Label className="text-sm font-medium">Advanced Features Applied</Label>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="outline">Dinkelbach Iteration</Badge>
+                    <Badge variant="outline">Ledoit-Wolf Shrinkage</Badge>
+                    <Badge variant="outline">Transaction Costs</Badge>
+                    <Badge variant="outline">Cardinality Constraints</Badge>
+                    <Badge variant="outline">Warm-Start QAOA</Badge>
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Card>
