@@ -24,6 +24,20 @@ export default {
 				ring: 'hsl(var(--ring))',
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
+				
+				/* Portfolio-specific colors */
+				success: {
+					DEFAULT: 'hsl(var(--success))',
+					foreground: 'hsl(var(--success-foreground))'
+				},
+				warning: {
+					DEFAULT: 'hsl(var(--warning))',
+					foreground: 'hsl(var(--warning-foreground))'
+				},
+				'market-bull': 'hsl(var(--market-bull))',
+				'market-bear': 'hsl(var(--market-bear))',
+				'market-neutral': 'hsl(var(--market-neutral))',
+				'quantum-glow': 'hsl(var(--quantum-glow))',
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
 					foreground: 'hsl(var(--primary-foreground))'
